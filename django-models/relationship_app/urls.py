@@ -1,9 +1,9 @@
 # relationship_app/urls.py
 from django.urls import path
+from . import views
 from .views import list_books, LibraryDetailView, index
 from django.contrib.auth.views import LoginView, LogoutView
-from . import views
-from .views import user_register
+from .views import user_register, list_books, LibraryDetailView
 
 urlpatterns = [
     path('books/', list_books, name='list_books'),
