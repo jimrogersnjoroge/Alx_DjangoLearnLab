@@ -22,23 +22,7 @@ class LibraryDetailView(DetailView):
 
 #user authentication
 
-# Login view
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')  # Redirect to a home page or another page after login
-    return render(request, 'relationship_app/login.html')
-
-# Logout view
-def user_logout(request):
-    logout(request)
-    return render(request, 'relationship_app/logout.html')
-
-# Registration view
+# Custom registration view
 def user_register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
