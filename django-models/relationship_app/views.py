@@ -23,12 +23,13 @@ class LibraryDetailView(DetailView):
 #user authentication
 
 # Custom registration view
-def user_register(request):
-    if request.method == 'POST':
+def register(request):
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user = form.save()
+            login(request, user)
+            return redirect ("index")
     else:
         form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
+    return render(request, "relationship_app/register.html", {"form": form})
