@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
+from django.utils.translation import gettext_lazy as _ 
+
 # Create your models here.
 class Author(models.Model):
     name = models.CharField(max_length=50)
@@ -20,7 +20,7 @@ class Book(models.Model):
         return f"{self.title} by {self.author}"  
 
 #Extending Book Model with Custom Permissions
-    class Meta(models.Model):
+    class meta(models.Model):
         Permissions_Choices =(
             ('can_add_book', 'can_add_book'),
             ('can_change_book', 'can_change_book'),
@@ -78,6 +78,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
 
+
+##
 # Custom User Model
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
@@ -100,7 +102,3 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(username, password, **extra_fields)
-    
-    class ExampleModel(models.Model):
-        user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    
