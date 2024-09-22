@@ -1,0 +1,27 @@
+<!-- blog/templates/post_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post List</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Blog Posts</h1>
+        <a href="{% url 'post_create' %}">Create New Post</a>
+    </header>
+    <main>
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+                    <p>{{ post.content|slice:":100" }}...</p>
+                </li>
+            {% empty %}
+                <li>No posts available.</li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

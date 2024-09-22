@@ -1,0 +1,19 @@
+<!-- blog/templates/post_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>{{ post.title }}</h1>
+        <a href="{% url 'post_edit' post.id %}">Edit Post</a>
+        <a href="{% url 'post_list' %}">Back to List</a>
+    </header>
+    <main>
+        <p>{{ post.content }}</p>
+    </main>
+</body>
+</html>
