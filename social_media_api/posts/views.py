@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import Post, Comment
+from .models import Post, Comment, Like
+from notifications.models import Notification
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -10,6 +11,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import generics, permissions,status
 from rest_framework.views import APIView
 from rest_framework import authentication
+from django.contrib.contenttypes.models import ContentType
 
 # Create your views here.
 #Views for posts
@@ -79,3 +81,31 @@ class FeedView(generics.GenericAPIView):
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serializer = PostSerializer(posts, many=True)   
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+#Like Functionality
+class LikeView(generics.GenericAPIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request, pk, *args, **kwargs):
+        post = generics.get_object_or_404(Post, pk=pk)
+
+        #Using get_or_create method to manage likes
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        #logic
+        if created:
+            #create notification if post liked for the first time
+            Notification.objects.create(
+                recipient = post.author,
+                actor = request.user,
+                verb = 'liked',
+                content_type = ContentType.objects.get_for_model(Post),
+                object_id = post.id
+            )
+            return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
+
+        else:
+            #if like already exists
+            like.delete()
+            return Response({'message': 'Post unliked'}, status=status.HTTP_200_OK)
+     
